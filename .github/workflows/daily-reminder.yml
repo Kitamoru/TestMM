@@ -1,0 +1,30 @@
+name: Daily Reminder Cron
+
+on:
+  schedule:
+    - cron: '37 17 * * *'  # UTC (20:37 МСК)
+  workflow_dispatch:
+
+jobs:
+  trigger-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger daily reminder
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          VERCEL_URL: ${{ secrets.VERCEL_URL }}
+        run: |
+          # Автоматически удаляем протокол если присутствует
+          CLEAN_URL="${VERCEL_URL#https://}"
+          CLEAN_URL="${CLEAN_URL#http://}"
+          
+          response_code=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://$CLEAN_URL/api/cron/daily-reminder")
+
+          if [ "$response_code" -ne 200 ]; then
+            echo "❌ Error: HTTP $response_code"
+            exit 1
+          else
+            echo "✅ Success: Triggered"
+          fi

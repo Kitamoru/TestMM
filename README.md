@@ -1,0 +1,607 @@
+# Moraleon - Telegram Mini App для отслеживания мотивации и выгорания в стиле фэнтези
+
+<div align="center">
+
+![Moraleon Logo](./public/logo.png)
+![Telegram Mini App](https://img.shields.io/badge/Telegram-Mini%20App-2AABEE?logo=telegram)
+![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)
+![Groq](https://img.shields.io/badge/Groq-AI-f55036?logo=groq)
+
+**Твой персональный трекер мотивации, который становится еще мощнее в команде**
+
+</div>
+
+## 📖 Содержание
+
+- [🎯 О проекте](#-о-проекте)
+- [🚀 Функциональность](#-функциональность)
+- [⚔️ Интеграция с PixelDungeon Dash](#️-интеграция-с-pixeldungeon-dash)
+- [🛠 Технологии](#-технологии)
+- [🚀 Быстрый старт](#-быстрый-старт)
+- [📚 Документация](#-документация)
+- [👨💻 Разработка](#-разработка)
+- [🤝 Участие](#-участие)
+
+## 🎯 О проекте
+
+Moraleon — это инновационное приложение для Telegram, которое превращает отслеживание мотивации и профилактику выгорания в увлекательную RPG-игру. Проект сочетает в себе геймификацию, практическую реализацию теории октализа и социальные элементы для создания комплексного решения проблемы профессионального выгорания.
+
+### 🌟 Ключевые особенности
+
+- **🎮 Геймификация**: Система классов персонажей, фамильяров и прогресса
+- **📊 Октализ**: Визуализация 8 ключевых факторов мотивации
+- **🤖 ИИ-Мудрец**: Персональные советы на основе анализа октаграммы
+- **✨ Динамические вопросы**: Ежедневные испытания с AI-генерацией уникальных формулировок
+- **⚔️ PixelDungeon Dash**: Встроенная мини-игра в стиле D&D с глобальным лидербордом
+- **👥 Социальные элементы**: Система друзей и совместных достижений
+- **💎 Экономика**: Внутриигровая валюта и система наград
+- **📱 Нативная интеграция**: Полная поддержка Telegram Mini Apps
+- **🔒 Безопасность**: End-to-end валидация данных через Telegram WebApp
+
+## 🚀 Функциональность
+
+### Основные модули
+
+| Модуль | Описание | Особенности |
+|--------|-----------|-------------|
+| **🏠 Главный экран** | Ежедневный опрос и отслеживание состояния | 10 вопросов, октаграмма мотивации |
+| **👥 Мои союзники** | Система друзей и командной работы | Приглашения, общие показатели |
+| **🛍️ Лавка фамильяров** | Магазин кастомизации | Покупка/применение спрайтов, система монет |
+| **📚 Справочник** | Обучение и руководство | Полное описание механик |
+| **🤖 ИИ-Мудрец** | Персональный советник на основе октаграммы | Анализ факторов, генерация трёх квестов, учёт класса и контекста |
+| **⚔️ Подземелье** | Запуск PixelDungeon Dash | Открывается как отдельный Telegram Mini App |
+| **🎯 Онбординг** | Определение класса персонажа | |
+
+### Система классов персонажей
+
+Проект реализует сложную систему классификации на основе:
+- **17 профессиональных ролей** (Разработчик, Дизайнер, HR, C-level и др.)
+- **4 базовых психотипа** (Достигатор, Исследователь, Социализатор, Убийца)
+- **68 уникальных классов** с индивидуальными описаниями
+
+### Ежедневная механика
+
+- **📝 Ежедневный опрос**: 10 вопросов для оценки состояния
+- **🎯 Ограничение**: 1 опрос в сутки для формирования привычки
+- **📈 Динамическое обновление**: Факторы октализиса обновляются после каждого опроса
+- **💫 Визуализация**: Интерактивная октаграмма показывает 8 аспектов мотивации
+
+### ✨ Автогенерация вопросов
+
+Каждый день перед прохождением испытания вопросы генерируются заново с помощью AI, чтобы формулировки не повторялись и сохранялась свежесть опыта.
+
+- **Модель**: `llama-3.3-70b-versatile` через Groq API
+- **Стиль**: Фэнтезийный эпос — возвышенный язык, метафоры огня, тьмы и битвы, обращение на «вы»
+- **Структура**: Каждый из 10 вопросов жёстко привязан к своему фактору Octalysis (фактор 1–2 — уровень выгорания, 3–10 — октаграмма мотивации)
+- **Надёжность**: При ошибке генерации или невалидном ответе автоматически применяется статический фолбек — приложение никогда не остаётся без вопросов
+- **Порядок отображения**: Вопросы 1 и 2 всегда идут первыми (они влияют на burnout-уровень), остальные 8 перемешиваются случайным образом
+
+**Пример сгенерированных вопросов:**
+
+> *«Сумели ли вы сегодня удержаться на ногах под натиском тёмных сил?»*
+> *«Всколыхнул ли в вас сегодня боевой задор, когда судьба бросила вам срочный вызов?»*
+> *«Чувствовали ли вы сегодня, как редкий артефакт ускользает сквозь пальцы, подгоняя вас вперёд?»*
+
+**API endpoint**: `POST /api/generate-questions`
+
+```typescript
+// Запрос
+{ "userId": "string" }
+
+// Ответ
+{
+  "questions": [
+    { "id": 1, "text": "Сумели ли вы сегодня..." },
+    { "id": 2, "text": "Чувствовали ли вы сегодня..." },
+    // ... 10 вопросов
+  ]
+}
+```
+
+### 🤖 ИИ-Мудрец
+
+Интеллектуальный помощник, который анализирует показатели октализиса и даёт персонализированные рекомендации в формате фэнтези-наставника. Использует модель Moonshot AI (Kimi K2) через Groq API для генерации глубоких, эмпатичных советов с учётом класса персонажа и динамики изменений.
+
+- **Анализ профиля**: Учитывает 8 факторов октализиса, баланс White/Black Hat, психотип игрока
+- **Персонализация**: Адаптирует советы под конкретный класс и архетип
+- **Квесты**: Предлагает три микро-квеста для гармонизации состояния
+- **Контекст**: Может учитывать дополнительный контекст от пользователя
+
+Пример ответа ИИ-Мудреца (сокращённо):
+
+> 🎭 **Титул:** Хранитель равновесия
+> 💫 **Состояние духа:** Чувствую, сейчас ты словно стоишь на перепутье между жаждой достижений и потребностью в тишине...
+> ⚔️ **Квесты для гармонии:**
+> 1. **«Карта тихой гавани»** — найди 10 минут, чтобы побыть в месте без цели...
+> 2. **«Послание в бутыли»** — напиши одному человеку короткую весть без повода...
+> 3. **«Опыт без подстраховки»** — сделай сегодня одно малое дело из любопытства...
+> 🌙 **Напутствие:** Твой свет уже горит. Иногда довольно просто дунуть на угли...
+
+---
+
+## ⚔️ Интеграция с PixelDungeon Dash
+
+Moraleon и игра [PixelDungeon Dash](https://dnd-runner.vercel.app) используют **общую базу данных Supabase**. Пользователи Moraleon автоматически идентифицируются в игре по `telegram_id` — отдельная регистрация не требуется.
+
+### Как работает
+
+Кнопка **"⚔️ Отправиться в подземелье"** на главном экране открывает игру как отдельный Telegram Mini App:
+
+```ts
+tg.openTelegramLink('https://t.me/MoraleonBot/dungeonrun');
+```
+
+Игра зарегистрирована в BotFather с short_name `dungeonrun`, URL `https://dnd-runner.vercel.app`.
+
+### Таблица game_scores (добавлена в общую БД)
+
+```prisma
+model game_scores {
+  id              Int      @id @default(autoincrement())
+  user_id         Int
+  telegram_id     BigInt
+  username        String
+  score           Float
+  character_class String?
+  created_at      DateTime @default(now())
+
+  user users @relation(fields: [user_id], references: [id])
+
+  @@index([score(sort: Desc)])
+  @@index([telegram_id])
+}
+```
+
+---
+
+## 🛠 Технологии
+
+### Frontend Stack
+- **Next.js 14** - React фреймворк с App Router
+- **TypeScript** - Статическая типизация
+- **TanStack Query** - Управление состоянием и кеширование
+- **Framer Motion** - Анимации и переходы
+- **React Tinder Card** - Swipe-интерфейс для опросов
+
+### Backend & Database
+- **Supabase** - Backend-as-a-Service (PostgreSQL + Auth + Storage)
+- **PostgreSQL** - База данных с Row Level Security
+- **Prisma** - ORM для удобной работы с базой данных и типобезопасными запросами
+- **Groq SDK** - Интеграция с AI моделями для генерации персонализированных советов и динамических вопросов
+
+### AI-интеграции
+
+| Назначение | Endpoint | Модель |
+|-----------|----------|--------|
+| **ИИ-Мудрец** (советы) | `POST /api/route` | Moonshot AI (Kimi K2) |
+| **Генерация вопросов** | `POST /api/generate-questions` | `llama-3.3-70b-versatile` |
+
+### Стилизация & UI
+- **CSS Modules** - Компонентные стили
+- **Адаптивный дизайн** - Mobile-first подход
+- **Telegram UI Kit** - Нативные элементы Telegram
+
+## 🚀 Быстрый старт
+
+1. **Клонирование репозитория**
+```bash
+git clone https://github.com/yourusername/moraleon.git
+cd moraleon
+```
+
+2. **Установка зависимостей**
+```bash
+npm install
+```
+
+3. **Настройка переменных окружения**
+```bash
+cp .env.example .env.local
+# Заполните необходимые ключи (см. раздел Конфигурация)
+```
+
+4. **Настройка базы данных (Prisma)**
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+5. **Запуск в режиме разработки**
+```bash
+npm run dev
+```
+
+## 📚 Документация
+
+### Архитектура проекта
+
+```
+moraleon/
+├── prisma/                # Prisma схема и миграции
+│   └── schema.prisma      # Схема БД (users, octalysis_factors, game_scores)
+├── app/                   # Next.js App Router
+│   ├── (routes)/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── friends/
+│   │   ├── shop/
+│   │   └── reference/
+│   ├── api/
+│   │   ├── data/
+│   │   ├── friends/
+│   │   ├── shop/
+│   │   ├── octalysis/
+│   │   ├── updateBurnout/
+│   │   ├── generate-questions/
+│   │   └── route.ts       # ИИ-Мудрец
+│   └── globals.css
+├── components/
+│   ├── ui/
+│   │   ├── BottomMenu.tsx
+│   │   ├── Loader.tsx
+│   │   └── SurveyModal.tsx
+│   ├── onboarding/
+│   │   └── Onboarding.tsx
+│   ├── CharacterSprite.tsx
+│   ├── Octagram.tsx
+│   └── BurnoutBlock.tsx
+├── hooks/
+│   └── useTelegram.ts
+├── lib/
+│   ├── api.ts
+│   ├── prisma.ts
+│   ├── groq.ts
+│   ├── supabase.ts
+│   ├── telegramAuth.ts
+│   ├── types.ts
+│   └── queryClient.ts
+└── public/
+    └── sprites/
+```
+
+### API Reference
+
+#### Основные endpoints
+
+| Метод | Endpoint | Назначение | Параметры |
+|-------|----------|------------|-----------|
+| `GET` | `/api/data` | Данные пользователя | `telegramId` |
+| `POST` | `/api/init` | Инициализация пользователя | `initData`, `ref` |
+| `POST` | `/api/updateBurnout` | Обновление уровня выгорания | `telegramId`, `burnoutDelta`, `factors` |
+| `GET` | `/api/octalysis` | Факторы октализиса | `userId` |
+| `POST` | `/api/route` | Получение совета от ИИ-Мудреца | `userId` |
+| `POST` | `/api/generate-questions` | Генерация вопросов через AI | `userId` |
+| `GET` | `/api/friends` | Список друзей | `telegramId` |
+| `DELETE` | `/api/friends/[id]` | Удаление друга | `friendId` |
+| `GET` | `/api/shop/sprites` | Спрайты для магазина | - |
+| `POST` | `/api/shop/purchase` | Покупка спрайта | `telegramId`, `spriteId` |
+| `POST` | `/api/shop/equip` | Применение спрайта | `telegramId`, `spriteId` |
+
+#### Пример использования API
+
+```typescript
+// Инициализация пользователя
+const response = await api.initUser(initData, startParam);
+
+// Получение данных пользователя
+const userData = await api.getUserData(telegramId, initData);
+
+// Генерация вопросов перед опросом
+const questionsResponse = await fetch('/api/generate-questions', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ userId: String(telegramId) }),
+});
+const { questions } = await questionsResponse.json();
+
+// Отправка результатов опроса
+await api.submitSurvey({
+  telegramId: user.id,
+  burnoutDelta: calculatedDelta,
+  factors: octalysisFactors,
+  initData
+});
+
+// Получение совета от ИИ-Мудреца
+const adviceResponse = await fetch('/api/route', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ userId: telegramId })
+});
+const { advice } = await adviceResponse.json();
+```
+
+### Система классов персонажей
+
+#### Базовые психотипы
+
+1. **Достигатор** - Фокус на целях и результатах
+2. **Исследователь** - Стремление к знаниям и открытиям
+3. **Социализатор** - Важность отношений и командной работы
+4. **Убийца** - Конкуренция и доказательство превосходства
+
+#### Примеры классов
+
+| Роль | Достигатор | Исследователь | Социализатор | Убийца |
+|------|------------|---------------|--------------|--------|
+| **Разработчик** | Мастер алгоритмов | Искатель оптимизации | Бард коллаборации | Разрушитель багов |
+| **Дизайнер** | Ясновидящий | Картограф опыта | Глас народа | Разрушитель хаоса |
+| **HR** | Инженер талантов | Картограф мотивации | Изгнанник выгорания | Охотник за головами |
+
+### Конфигурация
+
+#### Переменные окружения
+
+```env
+# Обязательные
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+TOKEN=your_telegram_bot_token
+NEXT_PUBLIC_BOT_USERNAME=your_bot_username
+DATABASE_URL=your_postgresql_connection_string
+GROQ_API_KEY=your_groq_api_key
+
+# Опциональные
+NEXT_PUBLIC_APP_URL=your_deployment_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+#### Prisma схема
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id                Int                @id @default(autoincrement())
+  telegram_id       BigInt             @unique
+  character_class   String?
+  octalysis_factors octalysis_factors?
+  game_scores       game_scores[]
+}
+
+model octalysis_factors {
+  user_id Int   @id
+  factor1 Int   @default(0)
+  factor2 Int   @default(0)
+  factor3 Int   @default(0)
+  factor4 Int   @default(0)
+  factor5 Int   @default(0)
+  factor6 Int   @default(0)
+  factor7 Int   @default(0)
+  factor8 Int   @default(0)
+
+  user users @relation(fields: [user_id], references: [id])
+}
+
+model game_scores {
+  id              Int      @id @default(autoincrement())
+  user_id         Int
+  telegram_id     BigInt
+  username        String
+  score           Float
+  character_class String?
+  created_at      DateTime @default(now())
+
+  user users @relation(fields: [user_id], references: [id])
+
+  @@index([score(sort: Desc)])
+  @@index([telegram_id])
+}
+```
+
+## 👨💻 Разработка
+
+### Скрипты package.json
+
+```json
+{
+  "dev": "next dev",
+  "build": "prisma generate && next build",
+  "start": "next start",
+  "lint": "next lint",
+  "type-check": "tsc --noEmit",
+  "postinstall": "prisma generate",
+  "db:pull": "prisma db pull"
+}
+```
+
+### Процесс разработки
+
+1. **Создание feature ветки**
+```bash
+git checkout -b feature/amazing-feature
+```
+
+2. **Разработка с горячей перезагрузкой**
+```bash
+npm run dev
+```
+
+3. **Проверка типов и линтинг**
+```bash
+npm run type-check && npm run lint
+```
+
+4. **Тестирование**
+```bash
+npm test
+```
+
+### Code Style
+
+- **TypeScript**: Строгая типизация, избегание `any`
+- **Именование**: PascalCase для компонентов, camelCase для функций
+- **Компоненты**: Функциональные компоненты с хуками
+- **Стили**: CSS Modules с BEM-подобной методологией
+
+### Тестирование
+
+```bash
+# Unit тесты
+npm test
+
+# E2E тесты
+npm run test:e2e
+
+# Проверка покрытия
+npm test -- --coverage
+```
+
+## 🚀 Деплой
+
+### Vercel (Рекомендуется)
+
+```bash
+npm run build
+vercel --prod
+```
+
+### Подготовка к продакшену
+
+1. **Оптимизация изображений**
+```bash
+npm run build:optimize
+```
+
+2. **Анализ бандла**
+```bash
+npm run analyze
+```
+
+3. **Тестирование производительности**
+```bash
+npm run test:performance
+```
+
+### Мониторинг и аналитика
+
+- **Supabase Analytics**: Мониторинг запросов к БД
+- **Vercel Analytics**: Аналитика производительности
+- **Custom Events**: Отслеживание пользовательских действий
+
+## 🤝 Участие
+
+Мы приветствуем вклад в развитие проекта!
+
+### Как помочь проекту
+
+1. **Сообщения об ошибках**: Используйте Issues для багов
+2. **Документация**: Помогите улучшить документацию
+3. **Переводы**: Добавьте поддержку новых языков
+
+### Процесс разработки
+
+1. **Форкните репозиторий**
+2. **Создайте feature ветку**
+3. **Сделайте коммит изменений**
+4. **Запушьте ветку**
+5. **Создайте Pull Request**
+
+### Требования к коду
+
+- ✅ Проходит линтинг и проверку типов
+- ✅ Соответствует существующему code style
+- ✅ Включает тесты для новой функциональности
+- ✅ Обновляет документацию при необходимости
+
+## 🐛 Поиск и устранение неисправностей
+
+### Распространенные проблемы
+
+**Проблема**: Ошибка аутентификации Telegram
+```bash
+# Решение: Проверьте TOKEN и initData
+console.log('Init Data:', initData);
+```
+
+**Проблема**: Ошибки Prisma или подключения к БД
+```bash
+# Решение: Проверьте DATABASE_URL и выполните миграции
+npx prisma db push
+npx prisma generate
+```
+
+**Проблема**: Не загружаются изображения
+```bash
+# Решение: Проверьте пути и настройки CORS
+npm run check:assets
+```
+
+**Проблема**: Вопросы не генерируются, показывается статический набор
+```bash
+# Решение: Проверьте GROQ_API_KEY и доступность модели llama-3.3-70b-versatile
+# Фолбек на статические вопросы работает автоматически — это штатное поведение
+```
+
+**Проблема**: Игра не открывается при нажатии кнопки
+```bash
+# Решение: Убедитесь что игра зарегистрирована в BotFather
+# short_name: dungeonrun, URL: https://dnd-runner.vercel.app
+```
+
+### Дебаггинг
+
+```typescript
+// Включение подробного логирования
+localStorage.setItem('debug', 'moraleon:*');
+
+// Проверка состояния Telegram WebApp
+console.log('WebApp state:', window.Telegram?.WebApp);
+```
+
+## 📈 Дорожная карта
+
+### Версия 1.1 (Q4 2026)
+- [ ] Расширенная аналитика мотивации
+- [ ] Групповые челленджи
+- [ ] Система достижений
+- [x] AI-ассистент для интерпретации результатов октаграммы (реализовано)
+- [x] Автогенерация уникальных вопросов через AI (реализовано)
+- [x] Мини-игра PixelDungeon Dash с глобальным лидербордом (реализовано)
+
+### Версия 1.2 (Q1 2027)
+- [ ] AI-ассистент для рекомендаций (расширение)
+- [ ] Расширенная аналитика для HR
+- [ ] API для сторонних интеграций
+- [ ] Результаты игры влияют на октаграмму мотивации
+
+### Версия 2.0 (Q2 2027)
+- [ ] Квесты и индивидуальные задания
+- [ ] Мини игры для вовлечения
+- [ ] Marketplace фамильяров
+
+## 👥 Команда разработки
+
+- **Developer**: [Иванов Вадим]
+- **UI/UX Designer**: [Мирзагалимов Булат]
+
+## 🔗 Полезные ссылки
+
+- [🌐 Приложение](https://t.me/MoraleonBot)
+- [⚔️ PixelDungeon Dash](https://t.me/MoraleonBot/dungeonrun)
+- [📖 Документация Telegram Mini Apps](https://core.telegram.org/bots/webapps)
+- [🗃️ Документация Supabase](https://supabase.com/docs)
+- [📘 Документация Prisma](https://www.prisma.io/docs)
+- [🤖 Groq API](https://console.groq.com/docs)
+- [🎮 Октализ: Геймификация в бизнесе](https://yukaichou.com/octalysis-book/)
+- [💬 Telegram канал обновлений](https://t.me/+CiYNPjJNjHswZDBi)
+
+---
+
+<div align="center">
+
+**Присоединяйтесь к нашей команде, вместе мы сделаем борьбу с выгоранием увлекательной!**
+
+*✨ Твоя мотивация — искра. Вместе мы — пламя! 🔥*
+
+</div>
